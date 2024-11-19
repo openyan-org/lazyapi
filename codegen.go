@@ -1,6 +1,7 @@
 package lazyapi
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"os/exec"
@@ -24,7 +25,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
 	"database/sql"
-	_ "{{if eq .DatabaseEngine "postgresql"}}github.com/lib/pq{{else if eq .DatabaseEngine "mysql"}}github.com/go-sql-driver/mysql{{end}}" // Database driver
+	_ "{{if eq .DatabaseEngine "postgres"}}github.com/lib/pq{{else if eq .DatabaseEngine "mysql"}}github.com/go-sql-driver/mysql{{end}}" // Database driver
 )
 
 func main() {
@@ -153,12 +154,11 @@ func (api *API) GenerateSourceCode() error {
 		filepath.Join(nextDir, ".env"):            envTemplate,
 	}
 
-	for fileName, tmplContent := range files {
-		fmt.Printf("Generating file: %s\n", fileName)
-		err := writeTemplate(fileName, tmplContent, api)
-		if err != nil {
-			return fmt.Errorf("failed to write %s: %w", fileName, err)
-		}
+	lazyapiFile := filepath.Join(nextDir, "lazyapi.json")
+	fmt.Println("Generating lazyapi.json...")
+	err = writeJSON(lazyapiFile, api)
+	if err != nil {
+		return fmt.Errorf("failed to write lazyapi.json: %w", err)
 	}
 
 	fmt.Println("Initializing Go module...")
@@ -167,7 +167,16 @@ func (api *API) GenerateSourceCode() error {
 		return fmt.Errorf("failed to initialize Go module: %w", err)
 	}
 
-	fmt.Println("Adding dependencies...")
+	fmt.Println("Generating files...")
+
+	for fileName, tmplContent := range files {
+		err := writeTemplate(fileName, tmplContent, api)
+		if err != nil {
+			return fmt.Errorf("failed to write %s: %w", fileName, err)
+		}
+	}
+
+	fmt.Println("Installing dependencies...")
 	dependencies := []string{
 		"github.com/google/uuid",
 		"github.com/go-chi/chi/v5",
@@ -220,7 +229,13 @@ func getNextOutputDirectory(baseOutDir string) (string, error) {
 		nextSerial = serials[len(serials)-1] + 1
 	}
 
-	return fmt.Sprintf("%s/%04d_lazyapi_src", baseOutDir, nextSerial), nil
+	for {
+		nextDir := fmt.Sprintf("%s/%04d_lazyapi_src", baseOutDir, nextSerial)
+		if _, err := os.Stat(nextDir); os.IsNotExist(err) {
+			return nextDir, nil
+		}
+		nextSerial++
+	}
 }
 
 func writeTemplate(fileName, tmplContent string, data interface{}) error {
@@ -242,7 +257,19 @@ func runCommand(cmd, dir string) error {
 	parts := strings.Split(cmd, " ")
 	c := exec.Command(parts[0], parts[1:]...)
 	c.Dir = dir
-	c.Stdout = os.Stdout
-	c.Stderr = os.Stderr
+	c.Stdout = nil
+	c.Stderr = nil
 	return c.Run()
+}
+
+func writeJSON(fileName string, data interface{}) error {
+	file, err := os.Create(fileName)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	encoder := json.NewEncoder(file)
+	encoder.SetIndent("", "  ")
+	return encoder.Encode(data)
 }
