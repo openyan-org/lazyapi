@@ -20,9 +20,9 @@ const (
 type WebFramework string
 
 const (
-	NetHTTP WebFramework = "net/http"
-	Hono    WebFramework = "hono"
-	Flask   WebFramework = "flask"
+	Chi   WebFramework = "chi"
+	Hono  WebFramework = "hono"
+	Flask WebFramework = "flask"
 )
 
 type FieldType string
