@@ -1,6 +1,6 @@
 # OpenYan LazyAPI
 
-![MIT License](https://img.shields.io/badge/license-MIT-blue.svg) ![Tests Workflow](https://github.com/openyan-org/lazyapi/actions/workflows/tests.yml/badge.svg)
+![MIT License](https://img.shields.io/badge/license-MIT-blue.svg) ![Tests Workflow](https://github.com/openyan-org/lazyapi/actions/workflows/tests.yml/badge.svg) [![Go Report](https://goreportcard.com/badge/openyan/lazyapi)](https://goreportcard.com/report/openyan/lazyapi)
 
 An intuitive no-code interface for creating documented, typesafe REST APIs.
 
