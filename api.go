@@ -45,3 +45,7 @@ func (api *API) AddMiddleware(m *Middleware) {
 func (api *API) AddModel(m *Model) {
 	api.Models = append(api.Models, *m)
 }
+
+func (api *API) AddEndpoint(e *Endpoint) {
+	api.Endpoints = append(api.Endpoints, *e)
+}
