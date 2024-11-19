@@ -10,13 +10,16 @@ Install the LazyAPI package by running:
 go get github.com/openyan-org/lazyapi
 ```
 
-## Usage
+## Library Usage
 
-### Creating an API specification
+LazyAPI is intended to be used through a graphical user interface such as OpenYan Console. Nevertheless, the following subsections serve as a quickstart guide for developing with the package.
 
-You can create a new API specification using `lazyapi.NewAPI()`, passing in the (1) name, (2) programming language, and (3) web framework. Here's an example of how you can create a Golang API specification with the Chi router:
+### Creating a LazyAPI specification
+
+You can create a new LazyAPI specification using `lazyapi.NewAPI()`, passing in the (1) name, (2) programming language, and (3) web framework. Here's an example LazyAPI specification for a Golang API:
 
 ```go
+// Using the go chi router
 api := lazyapi.NewAPI("Cats API", "go", "chi")
 api.SetDatabase("postgres")
 
@@ -61,15 +64,15 @@ catModel := lazyapi.NewModel("Cat", fields, []lazyapi.Relationship{})
 api.AddModel(catModel)
 ```
 
-Then you'll need to create the specification for a endpoint/route through which clients can access your CRUD services:
+Then you'll need to create the specification for the endpoints/routes through which clients can access your CRUD services:
 
 ```go
 createCatEndpoint := lazyapi.NewEndpoint("Post", "/cats")
 createCatEndpoint.SetBodySchema(catModel)
 createCatEndpoint.SetResponseSchema(struct {
-  user_id: int
+  message: string
 }{
-  user_id: 1,
+  message: "Successfully created a new cat!",
 })
 
 createCatEndpoint.SetAction("insert_record")
