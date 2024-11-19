@@ -21,7 +21,7 @@ func main() {
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	api := lazyapi.NewAPI("My API", "go", "net/http")
-	api.SetDatabase("postgresql")
+	api.SetDatabase("postgres")
 	api.Validate()
 
 	userFields := []lazyapi.Field{

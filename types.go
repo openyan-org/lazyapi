@@ -3,7 +3,7 @@ package lazyapi
 type DatabaseEngine string
 
 const (
-	PostgreSQL DatabaseEngine = "postgresql"
+	PostgreSQL DatabaseEngine = "postgres"
 	MySQL      DatabaseEngine = "mysql"
 	SQLite     DatabaseEngine = "sqlite"
 	None       DatabaseEngine = "none"
