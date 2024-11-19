@@ -3,7 +3,7 @@ package lazyapi
 type DatabaseEngine string
 
 const (
-	PostgreSQL DatabaseEngine = "postgresql"
+	PostgreSQL DatabaseEngine = "postgres"
 	MySQL      DatabaseEngine = "mysql"
 	SQLite     DatabaseEngine = "sqlite"
 	None       DatabaseEngine = "none"
@@ -34,4 +34,24 @@ const (
 	Timestamp FieldType = "timestamp"
 	Boolean   FieldType = "boolean"
 	UUID      FieldType = "uuid"
+)
+
+type ActionType string
+
+const (
+	InsertRecord ActionType = "insert_record"
+	UpdateRecord ActionType = "update_record"
+	DeleteRecord ActionType = "delete_record"
+	ReadRecord   ActionType = "read_record"
+	ListRecord   ActionType = "list_records"
+)
+
+type HTTPMethod string
+
+const (
+	HttpPost   HTTPMethod = "Post"
+	HttpGet    HTTPMethod = "Get"
+	HttpPut    HTTPMethod = "Put"
+	HTTPPatch  HTTPMethod = "Patch"
+	HttpDelete HTTPMethod = "Delete"
 )

@@ -38,10 +38,14 @@ func (api *API) SetDatabase(dbEngine DatabaseEngine) {
 	api.DatabaseEngine = dbEngine
 }
 
-func (api *API) AddMiddleware(m Middleware) {
-	api.GlobalMiddlewares = append(api.GlobalMiddlewares, m)
+func (api *API) AddMiddleware(m *Middleware) {
+	api.GlobalMiddlewares = append(api.GlobalMiddlewares, *m)
 }
 
-func (api *API) AddModel(m Model) {
-	api.Models = append(api.Models, m)
+func (api *API) AddModel(m *Model) {
+	api.Models = append(api.Models, *m)
+}
+
+func (api *API) AddEndpoint(e *Endpoint) {
+	api.Endpoints = append(api.Endpoints, *e)
 }
