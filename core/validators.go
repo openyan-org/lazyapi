@@ -18,7 +18,7 @@ func (api *API) Validate() error {
 	}
 
 	switch api.WebFramework {
-	case NetHTTP, Flask, Hono:
+	case Chi, Flask, Hono:
 		// framework is valid
 	default:
 		return fmt.Errorf("invalid WebFramework: %s", api.WebFramework)

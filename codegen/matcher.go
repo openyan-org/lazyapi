@@ -8,8 +8,8 @@ import (
 
 func GenerateSourceCode(api *lazyapi.API) error {
 	switch api.WebFramework {
-	case "net/http":
-		return GenerateNetHTTP(*api)
+	case "chi":
+		return GenerateChi(*api)
 	}
 
 	return errors.New("the given web frammework is not supported")

@@ -2,23 +2,111 @@
 
 ![MIT License](https://img.shields.io/badge/license-MIT-blue.svg) ![Tests Workflow](https://github.com/openyan-org/lazyapi/actions/workflows/tests.yml/badge.svg) [![Go Report](https://goreportcard.com/badge/openyan-org/lazyapi)](https://goreportcard.com/report/openyan-org/lazyapi)
 
-An intuitive no-code interface for creating documented, typesafe REST APIs.
+An intuitive no-code interface for creating RESTful CRUD APIs.
+
+Install the LazyAPI package by running:
+
+```bash
+go get github.com/openyan-org/lazyapi
+```
 
 ## Usage
 
-### Installation
-
 ### Creating an API specification
+
+You can create a new API specification using `lazyapi.NewAPI()`, passing in the (1) name, (2) programming language, and (3) web framework. Here's an example of how you can create a Golang API specification with the Chi router:
+
+```go
+api := lazyapi.NewAPI("Cats API", "go", "chi")
+api.SetDatabase("postgres")
+
+// Always validate the inputs.
+err := api.Validate()
+if err != nil {
+  log.Fatal(err)
+}
+```
+
+As with any CRUD APIs, you likely need to define a model/schema for your SQL tables:
+
+```go
+fields := []lazyapi.Field{
+  {
+    Name: "id",
+    Type: lazyapi.UUID,
+    Constraints: lazyapi.FieldConstraints{
+      Unique: true,
+      Required: true,
+    },
+  },
+  {
+    Name: "breed",
+    Type: lazyapi.Text,
+    Constraints: lazyapi.FieldConstraints{
+      Unique: false,
+      Required: true,
+    },
+  },
+  {
+    Name: "name",
+    Type: lazyapi.Text,
+    Constraints: lazyapi.FieldConstraints{
+      Unique: false,
+      Required: true,
+    }, 
+  },
+}
+
+catModel := lazyapi.NewModel("Cat", fields, []lazyapi.Relationship{})
+api.AddModel(catModel)
+```
+
+Then you'll need to create the specification for a endpoint/route through which clients can access your CRUD services:
+
+```go
+createCatEndpoint := lazyapi.NewEndpoint("Post", "/cats")
+createCatEndpoint.SetBodySchema(catModel)
+createCatEndpoint.SetResponseSchema(struct {
+  user_id: int
+}{
+  user_id: 1,
+})
+
+createCatEndpoint.SetAction("insert_record")
+
+api.AddEndpoint(createCatEndpoint)
+```
+
+
 
 ### Generating source code
 
-### Generating TypeScript bindings
+You can use `codegen.GenerateSourceCode()` to generate source code based on your LazyAPI specification.
 
-To learn more, please refer to the [documentation.](https://github.com/openyan-org/lazyapi/tree/master/docs)
+```go
+err = codegen.GenerateSourceCode(api)
+if err != nil {
+  log.Fatal(err)
+}
+```
 
-## Example
+The source files will be generated at `out/<serial>_lazyapi_src` relative to your current working directory.
 
-For more examples, please see the [examples](https://github.com/openyan-org/lazyapi/tree/master/examples) directory.
+```
+$ go run .
+Generating lazyapi.json...
+Initializing Go module...
+Generating files...
+Installing dependencies...
+Tidying up dependencies...
+Source code generated in directory: out/0001_lazyapi_src
+```
+
+For more information, please refer to the [documentation.](https://github.com/openyan-org/lazyapi/tree/master/docs)
+
+### TypeScript bindings
+
+The generated source code will come with TypeScript bindings, which can be used for your frontend client. It is recommended that you continue to generate TS bindings as you make changes. Here are some packages that might be useful: [tygo](https://github.com/gzuidhof/tygo) (Go)
  
 ## License
 
