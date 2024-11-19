@@ -14,9 +14,30 @@ func main() {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	api := lazyapi.NewAPI("My API", lazyapi.Go, lazyapi.NetHTTP)
-	api.SetDatabase(lazyapi.PostgreSQL)
+	api := lazyapi.NewAPI("My API", "go", "net/http")
+	api.SetDatabase("postgresql")
 	api.SetPathPrefix("/api")
+	api.Validate()
 
-	// userModel := lazyapi.NewModel("user", userFields, []lazyapi.Relationship{})
+	userFields := []lazyapi.Field{
+		{
+			Name: "id",
+			Type: lazyapi.UUID,
+			Constraints: lazyapi.FieldConstraints{
+				Unique:   true,
+				Required: true,
+			},
+		},
+		{
+			Name: "first_name",
+			Type: lazyapi.Text,
+			Constraints: lazyapi.FieldConstraints{
+				Unique:   false,
+				Required: true,
+			},
+		},
+	}
+
+	userModel := lazyapi.NewModel("user", userFields, []lazyapi.Relationship{})
+	api.AddModel(userModel)
 }
