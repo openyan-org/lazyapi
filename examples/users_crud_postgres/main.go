@@ -1,7 +1,8 @@
 package main
 
 import (
-	"github.com/openyan-org/lazyapi"
+	"github.com/openyan-org/lazyapi/codegen"
+	lazyapi "github.com/openyan-org/lazyapi/core"
 )
 
 func main() {
@@ -42,7 +43,7 @@ func main() {
 
 	api.AddEndpoint(createUserEndpoint)
 
-	err := api.GenerateSourceCode()
+	err := codegen.GenerateSourceCode(api)
 	if err != nil {
 		panic(err)
 	}
