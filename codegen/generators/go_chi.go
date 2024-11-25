@@ -117,6 +117,22 @@ func {{.BodySchema.Name}}Handler(w http.ResponseWriter, r *http.Request) {
 {{end}}
 `
 
+const setupScriptTemplate = `#!/bin/bash
+
+# Initialize go module
+echo "Initializing go module..."
+go mod init app > /dev/null 2>&1
+
+# Install dependencies
+echo "Installing dependencies..."
+go get github.com/go-chi/chi/v5 > /dev/null 2>&1
+go get github.com/joho/godotenv > /dev/null 2>&1
+go get github.com/lib/pq > /dev/null 2>&1
+go get github.com/google/uuid > /dev/null 2>&1
+
+echo -e "\nStart the app by running: \n\033[35m$ go run .\033[0m"
+`
+
 func GenerateChi(api lazyapi.API) (*GoAPI, error) {
 	mainFile, err := renderTemplate(mainTemplate, api)
 	if err != nil {
@@ -138,6 +154,11 @@ func GenerateChi(api lazyapi.API) (*GoAPI, error) {
 		return nil, fmt.Errorf("failed to render .env template: %w", err)
 	}
 
+	setupScriptFile, err := renderTemplate(setupScriptTemplate, api)
+	if err != nil {
+		return nil, fmt.Errorf("failed to render setup.sh template: %w", err)
+	}
+
 	lazyAPIFile, err := generateJSON(api)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate lazyapi.json: %w", err)
@@ -148,6 +169,7 @@ func GenerateChi(api lazyapi.API) (*GoAPI, error) {
 		RepositoriesFile: repositoriesFile,
 		HandlersFile:     handlersFile,
 		EnvFile:          envFile,
+		SetupScriptFile:  setupScriptFile,
 		LazyAPIFile:      lazyAPIFile,
 	}, nil
 }

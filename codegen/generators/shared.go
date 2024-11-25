@@ -11,6 +11,7 @@ type GoAPI struct {
 	RepositoriesFile string `json:"repositories.go"`
 	HandlersFile     string `json:"handlers.go"`
 	EnvFile          string `json:".env"`
+	SetupScriptFile  string `json:"setup.sh"`
 	LazyAPIFile      string `json:"lazyapi.json"`
 }
 

@@ -19,6 +19,7 @@ func writeFilesGo(baseDir string, goSrc generators.GoAPI) error {
 		"repositories.go": goSrc.RepositoriesFile,
 		"handlers.go":     goSrc.HandlersFile,
 		".env":            goSrc.EnvFile,
+		"setup.sh":        goSrc.SetupScriptFile,
 		"lazyapi.json":    goSrc.LazyAPIFile,
 	}
 
