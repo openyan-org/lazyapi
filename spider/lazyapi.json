@@ -1,0 +1,81 @@
+{
+  "PackageName": "Cats API",
+  "Language": "go",
+  "WebFramework": "chi",
+  "DatabaseEngine": "postgres",
+  "PathPrefix": "",
+  "GlobalMiddlewares": [],
+  "Endpoints": [
+    {
+      "Method": "Post",
+      "Path": "/cats",
+      "QueryParams": {},
+      "BodySchema": {
+        "Name": "Cat",
+        "Fields": [
+          {
+            "Name": "id",
+            "Type": "uuid",
+            "Constraints": {
+              "Unique": true,
+              "Required": true
+            }
+          },
+          {
+            "Name": "breed",
+            "Type": "text",
+            "Constraints": {
+              "Unique": false,
+              "Required": true
+            }
+          },
+          {
+            "Name": "name",
+            "Type": "text",
+            "Constraints": {
+              "Unique": false,
+              "Required": true
+            }
+          }
+        ],
+        "Relationships": []
+      },
+      "ResponseSchema": {
+        "message": "Successfully created a cat!"
+      },
+      "Action": "insert_record"
+    }
+  ],
+  "Models": [
+    {
+      "Name": "Cat",
+      "Fields": [
+        {
+          "Name": "id",
+          "Type": "uuid",
+          "Constraints": {
+            "Unique": true,
+            "Required": true
+          }
+        },
+        {
+          "Name": "breed",
+          "Type": "text",
+          "Constraints": {
+            "Unique": false,
+            "Required": true
+          }
+        },
+        {
+          "Name": "name",
+          "Type": "text",
+          "Constraints": {
+            "Unique": false,
+            "Required": true
+          }
+        }
+      ],
+      "Relationships": []
+    }
+  ]
+}

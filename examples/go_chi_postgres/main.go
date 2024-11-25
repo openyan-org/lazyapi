@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/openyan-org/lazyapi/codegen"
@@ -11,7 +12,6 @@ func main() {
 	api := lazyapi.NewAPI("Cats API", "go", "chi")
 	api.SetDatabase("postgres")
 
-	// Always validate the inputs.
 	err := api.Validate()
 	if err != nil {
 		log.Fatal(err)
@@ -59,8 +59,10 @@ func main() {
 
 	api.AddEndpoint(createCatEndpoint)
 
-	err = codegen.GenerateSourceCode(api)
+	src, err := codegen.GenerateSourceCode(api)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Println(src)
 }
